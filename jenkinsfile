@@ -1,7 +1,10 @@
 pipeline {
-  agent any {
+  agent {
+    docker {
+      image 'cypress/base:10'
+    }
   }
-  
+
   stages {
     
     stage('build') {
@@ -10,22 +13,8 @@ pipeline {
         sh 'curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && echo deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main | tee /etc/apt/sources.list.d/google-chrome.list && apt-get update && apt-get install -y google-chrome-stable'
         sh 'npm install'
         sh 'npm install cypress'
+        sh 'npm run chrome'
       }
     }
   }
-    parallel {
-        stage('chrome') {
-          steps {
-            echo "Running build ${env.BUILD_ID}"
-            sh 'npm run chrome'
-          }
-        }
-
-        stage('firefox') {
-          steps {
-            echo "Running build ${env.BUILD_ID}"
-             sh 'npm run firefox'
-          }
-        }
-   } 
 }
