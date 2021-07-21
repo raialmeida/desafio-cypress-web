@@ -5,15 +5,16 @@ pipeline {
       image 'cypress/browsers:node14.16.0-chrome89-ff86'
     }
   }
+  
+  stage('Initialize'){
+        def dockerHome = tool 'Docker'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
+    }
 
   stages {
     // first stage installs node dependencies and Cypress binary
     stage('build') {
       steps {
-        sh 'curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz \
-        && tar xzvf docker-17.04.0-ce.tgz \
-        && mv docker/docker /usr/local/bin \
-        && rm -r docker docker-17.04.0-ce.tgz'
         sh 'apt-get update -y'
         sh 'curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && echo deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main | tee /etc/apt/sources.list.d/google-chrome.list && apt-get update && apt-get install -y google-chrome-stable'
         sh 'npm install'
