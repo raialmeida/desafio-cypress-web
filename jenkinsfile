@@ -5,12 +5,13 @@ pipeline {
       image 'cypress/browsers:node14.16.0-chrome89-ff86'
     }
   }
-  
-  stage('Initialize'){
+  stages {
+    stage('Initialize'){
         def dockerHome = tool 'Docker'
         env.PATH = "${dockerHome}/bin:${env.PATH}"
     }
-
+  }
+  
   stages {
     // first stage installs node dependencies and Cypress binary
     stage('build') {
