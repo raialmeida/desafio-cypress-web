@@ -1,0 +1,20 @@
+{
+    "name": "compasso-uol",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "cypress": "cypress run",
+        "cypress:open": "cypress open",
+        "chrome": "cypress run --browser chrome",
+        "firefox": "cypress run --browser firefox"
+    },
+    "cypress-cucumber-preprocessor": {
+        "nonGlobalStepDefinitions": true
+    },
+    "devDependencies": {
+        "cypress-cucumber-preprocessor": "^4.1.4"
+    },
+    "dependencies": {
+        "cypress": "^8.0.0"
+    }
+}

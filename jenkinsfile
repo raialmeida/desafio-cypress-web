@@ -1,0 +1,56 @@
+pipeline {
+  agent {
+    // this image provides everything needed to run Cypress
+    docker {
+      image 'cypress/browsers:node14.16.0-chrome89-ff86'
+    }
+  }
+
+  stages {
+    // first stage installs node dependencies and Cypress binary
+    stage('build') {
+      steps {
+        sh 'apt-get update -y'
+        sh 'curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && apt-get update && apt-get install -y google-chrome-stable'
+        sh 'npm install'
+        sh 'npm install cypress'
+        sh 'npm run chrome'
+      }
+    }
+
+    stage('cypress parallel tests') {
+      environment {
+
+      }
+
+      // https://jenkins.io/doc/book/pipeline/syntax/#parallel
+      parallel {
+        // start several test jobs in parallel, and they all
+        // will use Cypress Dashboard to load balance any found spec files
+        stage('tester A') {
+          steps {
+            echo "Running build ${env.BUILD_ID}"
+            sh "npm run chrome"
+          }
+        }
+
+        // second tester runs the same command
+        stage('tester B') {
+          steps {
+            echo "Running build ${env.BUILD_ID}"
+            sh "npm run firefox"
+          }
+        }
+      }
+
+    }
+  }
+
+  post {
+    // shutdown the server running in the background
+    always {
+      echo 'Stopping local server'
+      sh 'pkill -f http-server'
+    }
+  }
+}
