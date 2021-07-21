@@ -6,12 +6,12 @@ pipeline {
     }
   }
   stages {
-    stage('Initialize'){
+    stage(){
         def dockerHome = tool 'Docker'
         env.PATH = "${dockerHome}/bin:${env.PATH}"
     }
   }
-  
+
   stages {
     // first stage installs node dependencies and Cypress binary
     stage('build') {
