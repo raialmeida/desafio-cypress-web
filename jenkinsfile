@@ -17,4 +17,5 @@ pipeline {
         sh 'npm run chrome'
       }
     }
+  }
 }
