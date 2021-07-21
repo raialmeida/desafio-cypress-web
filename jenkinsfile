@@ -2,16 +2,10 @@ pipeline {
   agent {
     // this image provides everything needed to run Cypress
     docker {
-      image 'cypress/browsers:node14.16.0-chrome89-ff86'
+      image 'cypress/base:10'
     }
   }
-  stages {
-    stage(){
-        def dockerHome = tool 'Docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-    }
-  }
-
+  
   stages {
     // first stage installs node dependencies and Cypress binary
     stage('build') {
