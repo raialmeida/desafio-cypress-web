@@ -44,6 +44,6 @@ sudo docker build .
 ### 🔩 Analises dos testes
 
 - O teste vai executar  o arquivo contendo o steps descrito em gherkin arquivo .feature.
-- O cypress possui o dashbord onde conseguimos analisar todo historico do testes, mas no momento não esta incluso no projeto devido a autenticação.
+- O cypress possui o dashbord onde conseguimos analisar todo historico do testes, mas no momento não está incluso no projeto devido a autenticação.
 - O cypress automaticamente gera o arquivo de vídeo do teste na pasta cypress/Videos, caso o teste falhe gera print na pasta cypress/Screenshots.
 
