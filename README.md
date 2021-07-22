@@ -16,7 +16,7 @@ Precisa ter instalado em sua máquina as seguintes ferramentas:
 
 ### 🔧 Instalação
 
- 1. Instale na máquina o Node.js ou posterior. o cypress precisam do node 12 ou superior.
+ 1. Instale na máquina o Node.js. o cypress precisam do node 12 ou superior.
  2. Clone este repositório.
  3. Execute`npm install` para instalar as dependências.
  
