@@ -1,0 +1,82 @@
+image: cypress/browsers:node14.16.0-chrome89-ff86
+options:
+  max-time: 10
+
+chrome: &chrome
+  name: Chrome test
+  caches:
+    - node
+    - cypress
+  script:
+    - npx @bahmutov/print-env BITBUCKET
+    - wget  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /usr/src/chrome.deb
+    - dpkg -i /usr/src/chrome.deb
+    - google-chrome --version
+    - npm run chrome
+  artifacts:
+    # store any generates images and videos as artifacts
+    - cypress/Screenshots/**
+    - cypress/Videos/**
+
+firefox: &firefox
+  name: Firefox test
+  caches:
+    - node
+    - cypress
+  script:
+    - npx @bahmutov/print-env BITBUCKET
+    - wget --no-verbose -O /tmp/firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=pt-BR"
+    - tar -C /opt -xjf /tmp/firefox.tar.bz2
+    - rm /tmp/firefox.tar.bz2
+    - firefox --version
+    - npm run firefox
+  artifacts:
+    # store any generates images and videos as artifacts
+    - cypress/Screenshots/**
+    - cypress/Videos/**
+pipelines:
+  pull-requests:
+    "**":
+      - step:
+          name: Install dependencies
+          caches:
+            - npm
+            - cypress
+            - node
+          script:
+            - npm ci
+      - parallel:
+          # cross-browser testing
+          - step:
+              <<: *chrome
+          - step:
+              <<: *firefox
+  branches:
+    "master":
+      - step:
+          name: Install dependencies
+          caches:
+            - npm
+            - cypress
+            - node
+          script:
+            - npm ci
+      - step:
+          name: Run Build
+          image: node:alpine
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run lint
+            - VUE_APP_COMPANY=vitta VUE_APP_APPLICATION_TITLE='Agendar Consultas' npm run build
+      - parallel:
+          # cross-browser testing
+          - step:
+              <<: *chrome
+          - step:
+              <<: *firefox
+definitions:
+  caches:
+    npm: $HOME/.npm
+    cypress: $HOME/.cache/Cypress
